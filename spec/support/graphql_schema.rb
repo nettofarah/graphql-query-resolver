@@ -68,14 +68,7 @@ IngredientType = GraphQL::ObjectType.define do
   field :id, types.ID
   field :name, types.String
   field :quantity, types.Int
-
-  field :vendor do
-    type VendorType
-
-    resolve -> (obj, args, ctx) {
-      obj.vendor
-    }
-  end
+  field :vendor, VendorType
 end
 
 QueryRoot = GraphQL::ObjectType.define do
@@ -98,7 +91,10 @@ QueryRoot = GraphQL::ObjectType.define do
 
     resolve -> (obj, args, ctx) {
       id = args['id']
-      Restaurant.find(id)
+      
+      GraphQL::QueryResolver::run(Restaurant, ctx, RestaurantType) do
+        Restaurant.find(id)
+      end
     }
   end
 end
