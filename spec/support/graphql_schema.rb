@@ -91,7 +91,7 @@ QueryRoot = GraphQL::ObjectType.define do
 
     resolve -> (obj, args, ctx) {
       id = args['id']
-      
+
       GraphQL::QueryResolver::run(Restaurant, ctx, RestaurantType) do
         Restaurant.find(id)
       end
