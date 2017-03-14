@@ -1,4 +1,6 @@
 # GraphQL::QueryResolver
+[![Build Status](https://travis-ci.org/nettofarah/graphql-query-resolver.svg?branch=master)](https://travis-ci.org/nettofarah/graphql-query-resolver)
+
 GraphQL::QueryResolver is an add-on to [graphql-ruby](https://github.com/rmosologo/graphql-ruby)
 that allows your field resolvers to minimize N+1 SELECTS issued by ActiveRecord.
 
