@@ -12,8 +12,11 @@ module GraphQL
       dependencies = reflection_dependencies.merge(dependencies)
 
       if dependencies.any? && to_load.present?
-        # ActiveRecord::Associations::Preloader.new(to_load, dependencies).run
-        ActiveRecord::Associations::Preloader.new.preload(to_load, dependencies)
+        if ActiveRecord::VERSION::MAJOR < 4
+          ActiveRecord::Associations::Preloader.new(to_load, dependencies).run
+        else
+          ActiveRecord::Associations::Preloader.new.preload(to_load, dependencies)
+        end
       end
 
       to_load

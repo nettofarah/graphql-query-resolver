@@ -73,15 +73,12 @@ describe GraphQL::QueryResolver do
       })
     end
 
-    expected_queries = [
-      'SELECT  "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = ? LIMIT ?',
-      'SELECT "chefs".* FROM "chefs" WHERE "chefs"."id" = 1',
-      'SELECT "recipes".* FROM "recipes" WHERE "recipes"."chef_id" = 1',
-      'SELECT "ingredients".* FROM "ingredients" WHERE "ingredients"."recipe_id" IN (1, 2, 3, 4)',
-      'SELECT "vendors".* FROM "vendors" WHERE "vendors"."id" IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)'
-    ]
 
-    expect(queries).to eq(expected_queries)
+    expect(queries[0]).to include('SELECT "restaurants".* FROM "restaurants" WHERE "restaurants"."id" = ?')
+    expect(queries[1]).to include('SELECT "chefs".* FROM "chefs" WHERE "chefs"."id"') # AR 4 will use id IN (1), AR 5 will use id = 1
+    expect(queries[2]).to include('SELECT "recipes".* FROM "recipes" WHERE "recipes"."chef_id"') # AR 4 will use id IN (1), AR 5 will use id = 1
+    expect(queries[3]).to include('SELECT "ingredients".* FROM "ingredients" WHERE "ingredients"."recipe_id" IN (1, 2, 3, 4)')
+    expect(queries[4]).to include('SELECT "vendors".* FROM "vendors" WHERE "vendors"."id" IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)')
   end
 
   it 'works with alias reflections' do

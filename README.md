@@ -34,6 +34,12 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/graphql-query-resolver. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
+To run the specs across all supported versions of Rails, check out the repo and follow these steps:
+```bash
+$ bundle install
+$ bundle exec appraisal install
+$ bundle exec appraisal rake
+```
 
 ## License
 

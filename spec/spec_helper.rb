@@ -30,5 +30,5 @@ def track_queries
     yield
   end
 
-  selects.map { |sel| sel[:sql] }
+  selects.map { |sel| sel[:sql].strip.gsub("  ", " ") }
 end
