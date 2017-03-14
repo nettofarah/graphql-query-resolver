@@ -1,8 +1,14 @@
 # GraphQL::QueryResolver
+GraphQL::QueryResolver is an add-on to [graphql-ruby](https://github.com/rmosologo/graphql-ruby)
+that allows your field resolvers to minimize N+1 SELECTS issued by ActiveRecord.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/graphql/activerecord`. To experiment with that code, run `bin/console` for an interactive prompt.
+GraphQL::QueryResolver will analyze the AST from incoming GraphQL queries and
+try to match query selections to `ActiveRecord::Reflections` present in your
+`ActiveRecord` models.
 
-TODO: Delete this and the text above, and describe your gem
+Every matched selection will be then passed on to
+`ActiveRecord::Associations::Preloader.new` so your queries now only issue
+one `SELECT` statement for every level of the GraphQL AST.
 
 ## Installation
 
@@ -14,15 +20,43 @@ gem 'graphql-query-resolver'
 
 And then execute:
 
-    $ bundle
+  $ bundle
 
 Or install it yourself as:
 
-    $ gem install graphql-query-resolver
+  $ gem install graphql-query-resolver
 
 ## Usage
+```ruby
+require 'graphql/query_resolver'
 
-TODO: Write usage instructions here
+# In your field resolver
+# Assuming `Project < ActiveRecord::Base` and a `ProjectType` GraphQL type:
+#
+field :projects do
+  type types[ProjectType]
+
+  resolve -> (obj, args, ctx) {
+    # Wrap your field resolve operation with `GraphQL::QueryResolver`
+    GraphQL::QueryResolver.run(Project, ctx, ProjectType) do
+      Project.all
+    end
+  }
+end
+
+# QueryResolver works the same way for single objects
+
+field :comment do
+  type CommentType
+  argument :id, !types.ID
+
+  resolve -> (obj, args, ctx) {
+    GraphQL::QueryResolver.run(Comment, ctx, CommentType) do
+      Comment.find(args['id'])
+    end
+  }
+end
+```
 
 ## Development
 
@@ -34,7 +68,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/graphql-query-resolver. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
-To run the specs across all supported versions of Rails, check out the repo and follow these steps:
+To run the specs across all supported versions of ActiveRecord, check out the repo and follow these steps:
 ```bash
 $ bundle install
 $ bundle exec appraisal install
