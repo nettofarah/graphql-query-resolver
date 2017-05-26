@@ -98,4 +98,32 @@ describe GraphQL::QueryResolver do
 
     expect(queries.size).to eq(2)
   end
+
+  it 'works with pagination' do
+    query = %{
+      query {
+        vendors(first: 5) {
+          edges {
+            node {
+              id
+              name
+              ingredients {
+                name
+                quantity
+              }
+            }
+            cursor
+          }
+          pageInfo {
+            hasNextPage
+          }
+        }
+      }
+    }
+    queries = track_queries do
+      GQL.query(query)
+    end
+
+    expect(queries.size).to eq(2)
+  end
 end

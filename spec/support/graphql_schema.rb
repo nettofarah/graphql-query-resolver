@@ -60,6 +60,14 @@ VendorType = GraphQL::ObjectType.define do
 
   field :id, types.ID
   field :name, types.String
+
+  field :ingredients do
+    type types[IngredientType]
+
+    resolve -> (obj, args, ctx) {
+      obj.ingredients
+    }
+  end
 end
 
 IngredientType = GraphQL::ObjectType.define do
@@ -94,6 +102,14 @@ QueryRoot = GraphQL::ObjectType.define do
 
       GraphQL::QueryResolver::run(Restaurant, ctx, RestaurantType) do
         Restaurant.find(id)
+      end
+    }
+  end
+
+  connection :vendors, VendorType.connection_type, max_page_size: 50 do
+    resolve -> (obj, args, ctx) {
+      GraphQL::QueryResolver::run(Vendor, ctx, VendorType) do
+        Vendor.all.to_a
       end
     }
   end
