@@ -1,6 +1,8 @@
 require 'graphql'
 require 'graphql/query_resolver'
 
+GraphQL::Relay::ConnectionType.default_nodes_field = true
+
 RestaurantType = GraphQL::ObjectType.define do
   name "restaurant"
 

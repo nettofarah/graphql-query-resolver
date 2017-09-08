@@ -26,6 +26,10 @@ module GraphQL
       selection.name == 'edges'
     end
 
+    def self.using_nodes_pagination?(selection)
+      selection.name == 'nodes'
+    end
+
     def self.map_relay_pagination_depencies(class_name, selection, dependencies)
       node_selection = selection.selections.find { |sel| sel.name == 'node' }
 
@@ -46,6 +50,11 @@ module GraphQL
 
         if using_relay_pagination?(selection)
           map_relay_pagination_depencies(class_name, selection, dependencies)
+          next
+        end
+
+        if using_nodes_pagination?(selection)
+          map_dependencies(class_name, selection, dependencies)
           next
         end
 
