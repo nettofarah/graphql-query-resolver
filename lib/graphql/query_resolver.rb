@@ -67,7 +67,7 @@ module GraphQL
         end
 
         if using_nodes_pagination?(selection)
-          map_dependencies(class_name, fragment_definition, selection, dependencies)
+          map_dependencies(class_name, selection, fragment_definitions, dependencies)
           next
         end
 
