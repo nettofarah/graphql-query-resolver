@@ -22,12 +22,12 @@ gem 'graphql-query-resolver'
 
 And then execute:
 ```bash
-  $ bundle
+$ bundle
 ```
 
 Or install it yourself as:
 ```bash
-  $ gem install graphql-query-resolver
+$ gem install graphql-query-resolver
 ```
 
 ## Usage
